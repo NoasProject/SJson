@@ -10,11 +10,23 @@ public class SJSon<T> where T : class, new()
 
     public static string ClassName { get { return typeof(T).Name; } }
 
+    ///<summary>
+    /// ReLoad Json Files.
+    /// <para>
+    /// このクラスに紐づく、Jsonファイルを再読み込みをします
+    /// </para>
+    ///</summary>
     public void ReLoad()
     {
         m_DB = m_Load();
     }
 
+    ///<summary>
+    /// Saved Json Files. Path : Root + ClassName
+    /// <para>
+    /// このクラスをJsonファイルとして保存します。
+    /// </para>
+    ///</summary>
     public void Save()
     {
         if (Directory.Exists(PATH))
@@ -33,6 +45,12 @@ public class SJSon<T> where T : class, new()
         this.m_Write(PATH, UnityEngine.JsonUtility.ToJson(DB));
     }
 
+    ///<summary>
+    /// Delete Json Files. and Create This New Class.
+    /// <para>
+    /// 保存されているJsonファイルを削除し、このクラスを再生成します
+    /// </para>
+    ///</summary>
     public void Delete()
     {
         try
