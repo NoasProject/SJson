@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Security.Cryptography;
 
 public class SJSon<T> where T : class, new()
 {
