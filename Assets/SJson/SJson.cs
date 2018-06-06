@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-public class SJSon<T> where T : class, new()
+public class SJson<T> where T : class, new()
 {
     private static string ROOT = "SJsonDB/";
 

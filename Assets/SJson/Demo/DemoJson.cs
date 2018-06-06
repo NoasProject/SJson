@@ -1,7 +1,7 @@
 ﻿using System;
 
 [Serializable]
-public class SampleJsonClass : SJSon<SampleJsonClass>
+public class SampleJsonClass : SJson<SampleJsonClass>
 {
     public int num;
     public string name;
