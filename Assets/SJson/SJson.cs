@@ -124,7 +124,7 @@ public class SJSon<T> where T : class, new()
             }
             catch (Exception e)
             {
-                throw e;
+                UnityEngine.Debug.LogError("Delete Error : " + e.Message);
             }
         }
     }
