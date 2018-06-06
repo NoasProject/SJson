@@ -20,7 +20,9 @@ ExportedObj/
 *.user
 *.unityproj
 *.booproj
-.vscode
+*.vscode
+*.unitypackage.meta
+
 # ============ #
 # OS generated #
 # ============ #
