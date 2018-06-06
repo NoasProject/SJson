@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class DemoMain : MonoBehaviour
 {
@@ -24,15 +25,19 @@ public class DemoMain : MonoBehaviour
 
     void Start()
     {
-        this.NumField.text = DemoJson.DB.num.ToString();
-        this.NameField.text = DemoJson.DB.name;
+        this.NumField.text = SampleJsonClass.DB.num.ToString();
+        this.NameField.text = SampleJsonClass.DB.name;
     }
 
     public void OnSaveBtn()
     {
-        DemoJson.DB.num = int.Parse(m_NumField.text);
-        DemoJson.DB.name = m_NameField.text;
-        DemoJson.DB.info.save_count = DemoJson.DB.info.save_count + 1;
-        DemoJson.DB.Save();
+        if (SampleJsonClass.DB.save_info.time_stamp > 0)
+            Debug.LogErrorFormat("After Save DateTime : {0}", new DateTime().AddSeconds(SampleJsonClass.DB.save_info.time_stamp).ToString("yyyy-MM-dd hh:mm:ss"));
+
+        SampleJsonClass.DB.num = int.Parse(m_NumField.text);
+        SampleJsonClass.DB.name = m_NameField.text;
+        SampleJsonClass.DB.save_info.count = SampleJsonClass.DB.save_info.count + 1;
+        SampleJsonClass.DB.save_info.time_stamp = (long)(DateTime.Now - new DateTime()).TotalSeconds;
+        SampleJsonClass.DB.Save();
     }
 }

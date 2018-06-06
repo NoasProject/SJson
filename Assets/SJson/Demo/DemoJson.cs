@@ -1,15 +1,21 @@
-﻿
-[System.Serializable]
-public class DemoJson : SJSon<DemoJson>
+﻿using System;
+
+[Serializable]
+public class SampleJsonClass : SJSon<SampleJsonClass>
 {
     public int num;
     public string name;
-    public DemoJson2 m_info;
-    public DemoJson2 info { get { return this.m_info ?? (this.m_info = new DemoJson2()); } }
+    public SampleJsonSaveClass m_save_info;
+    public SampleJsonSaveClass save_info
+    {
+        get { return this.m_save_info ?? (this.m_save_info = new SampleJsonSaveClass()); }
+    }
+
 }
 
-[System.Serializable]
-public class DemoJson2
+[Serializable]
+public class SampleJsonSaveClass
 {
-    public int save_count;
+    public int count;
+    public long time_stamp;
 }
