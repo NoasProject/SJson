@@ -3,6 +3,13 @@
 [Serializable]
 public class SampleJsonClass : SJson<SampleJsonClass>
 {
+    public override bool IsAccessFilter { get { return true; } }
+
+    protected override void SetWriteAccess()
+    {
+        this.AddWriteAccessClass<SampleJsonClass>(ESJsonAccessLevel.DELETE);
+    }
+
     public int num;
     public string name;
     public SampleJsonSaveClass m_save_info;

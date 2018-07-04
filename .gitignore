@@ -7,6 +7,9 @@ UnityGenerated/
 Library/
 SJsonDB
 
+#VSCode
+*VSCode*
+
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
 # ===================================== #
