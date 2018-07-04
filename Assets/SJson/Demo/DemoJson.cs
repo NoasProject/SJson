@@ -7,7 +7,7 @@ public class SampleJsonClass : SJson<SampleJsonClass>
 
     protected override void SetWriteAccess()
     {
-        this.AddWriteAccessClass<SampleJsonClass>(ESJsonAccessLevel.NONE);
+        this.AddWriteAccessClass<SampleJsonClass>(ESJsonAccessLevel.DELETE);
     }
 
     public int num;

@@ -7,6 +7,26 @@ using System.Diagnostics;
 
 public class SJson<T> where T : class, new()
 {
+    #region Enum
+
+    public enum ESJsonAccessLevel
+    {
+        NONE = 0,
+        SAVE = 30,
+        DELETE = 30,
+        FULL = 99
+    }
+
+    #endregion
+
+    #region Instance
+
+    private static T m_DB = null;
+
+    public static T DB { get { return m_DB ?? (m_DB = m_Load()); } }
+
+    #endregion
+
     #region var
 
     // Write And Read Root Path.
@@ -20,6 +40,7 @@ public class SJson<T> where T : class, new()
 
     #endregion
 
+    #region Public method
     ///<summary>
     /// ReLoad Json Files.
     /// <para>
@@ -103,22 +124,32 @@ public class SJson<T> where T : class, new()
 
         ReLoad();
     }
+    #endregion
+
+    #region Protected Method.
+
+    ///<summary>
+    /// Save and Delete Access Class Filters. Must ovveride For `IsAccessFilter`
+    /// <para>
+    /// このJsonへのSave, Deleteのアクセス権限を付与できます。必ず`IsAccessFilter`をOvverideしてください
+    /// </para>
+    ///</summary>
+    protected virtual void SetWriteAccess() { }
+
+    protected void AddWriteAccessClass<T>(ESJsonAccessLevel level) where T : new()
+    {
+        this.m_AccessLels[typeof(T).Name] = level;
+    }
+    #endregion
 
     #region Access Filter Method.
     // Class Name : Enum
     private Dictionary<string, ESJsonAccessLevel> m_AccessLels;
 
-    protected virtual void SetWriteAccess() { }
-
     private void m_SetWriteAccess()
     {
         this.m_AccessLels = new Dictionary<string, ESJsonAccessLevel>();
         this.SetWriteAccess();
-    }
-
-    protected void AddWriteAccessClass<T>(ESJsonAccessLevel level) where T : new()
-    {
-        this.m_AccessLels[typeof(T).Name] = level;
     }
 
     // True -> Access ok. false -> dont Access.
@@ -190,9 +221,6 @@ public class SJson<T> where T : class, new()
             }
         }
     }
-
-    private static T m_DB = null;
-    public static T DB { get { return m_DB ?? (m_DB = m_Load()); } }
 
     private void m_Delete(string self)
     {
@@ -308,12 +336,4 @@ public class SJson<T> where T : class, new()
         }
     }
     #endregion
-}
-
-public enum ESJsonAccessLevel
-{
-    NONE = 0,
-    SAVE = 30,
-    DELETE = 30,
-    FULL = 99
 }
