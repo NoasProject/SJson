@@ -3,12 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Diagnostics;
 
 public class SJson<T> where T : class, new()
 {
+    #region var
+
+    // Write And Read Root Path.
     private static string ROOT = "SJsonDB/";
 
+    // this my class Name
     public static string ClassName { get { return typeof(T).Name; } }
+
+    // access filters.
+    public virtual bool IsAccessFilter { get { return false; } }
+
+    #endregion
 
     ///<summary>
     /// ReLoad Json Files.
@@ -29,6 +39,14 @@ public class SJson<T> where T : class, new()
     ///</summary>
     public void Save()
     {
+        string callClassName = new StackFrame(1).GetMethod().ReflectedType.FullName;
+        if (!this.m_IsAccessCheck(callClassName, ESJsonAccessLevel.SAVE))
+        {
+            this.ReLoad();
+            UnityEngine.Debug.LogErrorFormat("!!! Save Access Error !!!  Call Class Name : {0}", callClassName);
+            return;
+        }
+
         if (Directory.Exists(PATH))
         {
             try
@@ -39,7 +57,7 @@ public class SJson<T> where T : class, new()
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.LogError("File Delete Error." + e.Message);
+                UnityEngine.Debug.LogFormat("<color=red>File Delete Error.{0}</color>", e.Message);
             }
         }
         this.m_Write(PATH, UnityEngine.JsonUtility.ToJson(DB));
@@ -55,6 +73,14 @@ public class SJson<T> where T : class, new()
     {
         try
         {
+            string callClassName = new StackFrame(1).GetMethod().ReflectedType.FullName;
+            if (!this.m_IsAccessCheck(callClassName, ESJsonAccessLevel.DELETE))
+            {
+                UnityEngine.Debug.LogErrorFormat("!!! Delete Access Error !!!  Call Class Name : {0}", callClassName);
+                this.ReLoad();
+                return;
+            }
+
             if (IsFilesSave)
             {
                 this.m_Delete(PATH);
@@ -77,6 +103,45 @@ public class SJson<T> where T : class, new()
 
         ReLoad();
     }
+
+    #region Access Filter Method.
+    // Class Name : Enum
+    private Dictionary<string, ESJsonAccessLevel> m_AccessLels;
+
+    protected virtual void SetWriteAccess() { }
+
+    private void m_SetWriteAccess()
+    {
+        this.m_AccessLels = new Dictionary<string, ESJsonAccessLevel>();
+        this.SetWriteAccess();
+    }
+
+    protected void AddWriteAccessClass<T>(ESJsonAccessLevel level) where T : new()
+    {
+        this.m_AccessLels[typeof(T).Name] = level;
+    }
+
+    // True -> Access ok. false -> dont Access.
+    private bool m_IsAccessCheck(string name, ESJsonAccessLevel level)
+    {
+        if (this.m_AccessLels == null)
+            this.m_SetWriteAccess();
+
+        if (!this.IsAccessFilter)
+            return true;
+
+        if (!this.m_AccessLels.ContainsKey(name))
+            return false;
+
+        if (this.m_AccessLels[name] == ESJsonAccessLevel.FULL)
+            return true;
+
+        if (this.m_AccessLels[name] == level)
+            return true;
+
+        return false;
+    }
+    #endregion
 
     #region  Privete Methods.
     private static bool IsEditor
@@ -243,4 +308,12 @@ public class SJson<T> where T : class, new()
         }
     }
     #endregion
+}
+
+public enum ESJsonAccessLevel
+{
+    NONE = 0,
+    SAVE = 30,
+    DELETE = 30,
+    FULL = 99
 }
