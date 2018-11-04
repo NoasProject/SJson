@@ -121,7 +121,7 @@ public class SJson<T> where T : class, new()
             }
             else
             {
-                return UnityEngine.Application.persistentDataPath + ClassName;
+                return UnityEngine.Application.persistentDataPath  + "/" + ROOT + ClassName;
             }
         }
     }
@@ -178,7 +178,7 @@ public class SJson<T> where T : class, new()
         }
         catch (Exception e)
         {
-            UnityEngine.Debug.LogError("Not Load To Json Files" + e.Message);
+            UnityEngine.Debug.Log("Not Load To Json Files" + e.Message);
         }
 
         return string.Empty;
